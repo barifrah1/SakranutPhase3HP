@@ -15,9 +15,13 @@ class Net(nn.Module):
     
     def __init__(self,feature_num):
         super(Net, self).__init__()
-        self.fc1 = nn.Linear(feature_num, 512)
-        self.fc2 = nn.Linear(512, 512)
-        self.fc3 = nn.Linear(512, 2)
+        self.fc1 = nn.Linear(feature_num, 256)
+        self.fc2 = nn.Linear(256, 512)
+        self.fc3 = nn.Linear(512, 256)
+        self.fc4 = nn.Linear(256, 128)
+        self.fc5 = nn.Linear(128, 64)
+        self.fc6 = nn.Linear(64, 32)
+        self.fc7 = nn.Linear(32, 2)
         #self.dropout = nn.Dropout(0.5)
         
     def forward(self, x):
@@ -25,7 +29,11 @@ class Net(nn.Module):
         #x = self.dropout(x)
         x = F.relu(self.fc2(x))
         #x = self.dropout(x)
-        x = self.fc3(x)
+        x = F.relu(self.fc3(x))
+        x = F.relu(self.fc4(x))
+        x = F.relu(self.fc5(x))
+        x = F.relu(self.fc6(x))
+        x = self.fc7(x)
         return x
     
 def train(X_train,y_train,model,
@@ -33,7 +41,7 @@ def train(X_train,y_train,model,
           n_epochs,
           criterion = nn.CrossEntropyLoss(),
 ):
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.002)#5e-3)
+    optimizer = torch.optim.Adam(model.parameters(), lr=5e-3)
     batch_no = len(X_train) // batch_size
     #print(batch_no)
     train_loss = 0
