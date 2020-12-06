@@ -15,16 +15,16 @@ class Net(nn.Module):
     
     def __init__(self,feature_num):
         super(Net, self).__init__()
-        self.fc1 = nn.Linear(feature_num, 128)
-        self.fc2 = nn.Linear(128, 64)
-        self.fc3 = nn.Linear(64, 2)
-        self.dropout = nn.Dropout(0.2)
+        self.fc1 = nn.Linear(feature_num, 512)
+        self.fc2 = nn.Linear(512, 512)
+        self.fc3 = nn.Linear(512, 2)
+        #self.dropout = nn.Dropout(0.5)
         
     def forward(self, x):
         x = F.relu(self.fc1(x))
-        x = self.dropout(x)
+        #x = self.dropout(x)
         x = F.relu(self.fc2(x))
-        x = self.dropout(x)
+        #x = self.dropout(x)
         x = self.fc3(x)
         return x
     
@@ -33,7 +33,7 @@ def train(X_train,y_train,model,
           n_epochs,
           criterion = nn.CrossEntropyLoss(),
 ):
-    optimizer = torch.optim.SGD(model.parameters(), lr=2e-3)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.002)#5e-3)
     batch_no = len(X_train) // batch_size
     #print(batch_no)
     train_loss = 0
@@ -55,9 +55,15 @@ def train(X_train,y_train,model,
             train_loss += loss.item()*batch_size
         
         train_loss = train_loss / len(X_train)
-        print('labels',labels)
-        print('y_train',y_train[start:end])
-        auc=roc_auc_score(y_train[start:end],labels)
+        #print('labels',labels)
+        #print('y_train',y_train[start:end])
+        with torch.no_grad():
+            x_var = Variable(torch.FloatTensor(X_train))
+            output_epoch=model(x_var)
+            values, labels=torch.max(output_epoch, 1)
+            print(type(labels))
+            print(type(y_train))
+            auc=roc_auc_score(y_train,labels)
         print('auc',auc)
         """if train_loss <= train_loss_min:
             print("Validation loss decreased ({:6f} ===> {:6f}). Saving the model...".format(train_loss_min,train_loss))

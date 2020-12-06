@@ -18,8 +18,8 @@ if __name__ == '__main__':
     print('feature_num',feature_num)
     model=NN.Net(feature_num)
     NN.train(X_train,y_train,model,
-          batch_size = 256,
-          n_epochs = 100,
+          batch_size = 512,
+          n_epochs = 50,
           criterion = nn.CrossEntropyLoss())
           #optimizer = nn.BCELoss)
     
