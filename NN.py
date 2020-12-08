@@ -6,6 +6,7 @@ from data_loader import DataLoader
 from tqdm import tqdm
 import numpy as np
 from sklearn.metrics import roc_curve, roc_auc_score, auc
+from matplotlib import pyplot as plt
 
 
 
@@ -28,15 +29,25 @@ class Net(nn.Module):
         x = self.fc3(x)
         return x
     
-def train(X_train,y_train,model,
+def predict(x,y,model,auc_list):
+    with torch.no_grad():
+        x_var = Variable(torch.FloatTensor(x)) 
+        test_result = model(x_var)
+        #loss = criterion(test_result,y_var)
+        values, labels = torch.max(test_result, 1)
+        auc=roc_auc_score(y,labels)
+        auc_list.append(auc)
+    return auc,auc_list
+def train(X_train,y_train,model,x_test,y_test,
           batch_size,
           n_epochs,
           criterion = nn.CrossEntropyLoss(),
 ):
-    optimizer = torch.optim.Adam(model.parameters(), lr=5e-3,weight_decay=0.01)
+    optimizer = torch.optim.Adam(model.parameters(), lr=2e-4)
     batch_no = len(X_train) // batch_size
     #print(batch_no)
     train_loss = 0
+    auc_test=[]
     #train_loss_min = np.Inf
     for epoch in range(n_epochs):
         for i in range(batch_no):
@@ -61,8 +72,6 @@ def train(X_train,y_train,model,
             x_var = Variable(torch.FloatTensor(X_train))
             output_epoch=model(x_var)
             values, labels=torch.max(output_epoch, 1)
-            print(type(labels))
-            print(type(y_train))
             auc=roc_auc_score(y_train,labels)
         print('auc',auc)
         """if train_loss <= train_loss_min:
@@ -75,13 +84,13 @@ def train(X_train,y_train,model,
             print('')
             print("Epoch: {} \tTrain Loss: {} \tTrain Accuracy: {} \tTrain auc:".format(epoch+1, train_loss,num_right / len(y_train[start:end]),auc ))
         print('Training Ended! ')
+        if epoch%10==0:
+            pre,auc_test=predict(x_test,y_test,model,auc_test)
+            print(f'predict auc in epoec {epoch+1} is {pre}')
+    plt.plot(auc_test)
+    plt.show()
+            
+
         
-        
-    def predict(x,y):
-        X_test = df_test.iloc[:,1:].values
-        X_test_var = Variable(torch.FloatTensor(X_test), requires_grad=False) 
-        with torch.no_grad():
-            test_result = model(X_test_var)
-            values, labels = torch.max(test_result, 1)
-            pred = labels.data.numpy()
+
 

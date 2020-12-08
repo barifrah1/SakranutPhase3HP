@@ -17,9 +17,9 @@ if __name__ == '__main__':
     feature_num=len(columnsInfo)
     print('feature_num',feature_num)
     model=NN.Net(feature_num)
-    NN.train(X_train,y_train,model,
+    NN.train(X_train,y_train,model,X_test,y_test,
           batch_size = 256,
-          n_epochs = 500,
+          n_epochs = 15000,
           criterion = nn.CrossEntropyLoss())
           #optimizer = nn.BCELoss)
     
