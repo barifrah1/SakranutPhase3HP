@@ -1,56 +1,31 @@
 from data_loader import DataLoader
 from utils import args
-#from bayesClassifier import BayesClassifier
-#from curiousBayesClassifier import CuriousBayesClassifier
-#from sklearn.ensemble import RandomForestClassifier
+# from bayesClassifier import BayesClassifier
+# from curiousBayesClassifier import CuriousBayesClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import roc_auc_score
-import NN 
+import NN
 from NN import Net
 import torch.nn as nn
 
 if __name__ == '__main__':
     data_loader = DataLoader(args)
     # preprocessing
-    X,Y ,columnsInfo = data_loader.preprocess()
+    X, Y, columnsInfo = data_loader.preprocess()
     # split data to train and test
-    X_train,X_test,y_train,y_test = data_loader.split_train_test(X,Y)
-    feature_num=len(columnsInfo)
-    print('feature_num',feature_num)
-    model=NN.Net(feature_num)
-    NN.train(X_train,y_train,model,X_test,y_test,
-          batch_size = 256,
-          n_epochs = 15000,
-          criterion = nn.CrossEntropyLoss())
-          #optimizer = nn.BCELoss)
-    
-    
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    X_train, X_test, y_train, y_test = data_loader.split_train_test(X, Y)
+    """clf = RandomForestClassifier(n_estimators=300)
+    clf.fit(X_train, y_train)
+    y_pred = clf.predict_proba(X_test)[:, -1]
+    print("rf test auc is:", roc_auc_score(y_test, y_pred))"""
+    feature_num = len(columnsInfo)
+    print('feature_num', feature_num)
+    model = NN.Net(feature_num)
+    NN.train(X_train, y_train, model, X_test, y_test,
+             batch_size=150,
+             n_epochs=150,
+             criterion=nn.BCELoss())
+    # optimizer = nn.BCELoss)
 
     """# for comparison:
     clf = RandomForestClassifier(
@@ -61,12 +36,15 @@ if __name__ == '__main__':
     print("rf auc:", auc)
     bayes = BayesClassifier(train, columnsInfo)
     # print test error for internal use
-    print('first test error: ', bayes.calculate_test_error(test_s)[0], ' classifing first test error: ', bayes.calculate_test_error(test_s)[1])
+    print('first test error: ', bayes.calculate_test_error(test_s)[
+          0], ' classifing first test error: ', bayes.calculate_test_error(test_s)[1])
     print('cm:', bayes.confusion_matrix_and_auc(test_s)[
         0], 'auc: ', bayes.confusion_matrix_and_auc(test_s)[1])
     new_theta = bayes.fit()
-    print('final test error: ', bayes.calculate_test_error(test_s)[0], ' classifing final test error: ', bayes.calculate_test_error(test_s)[1])
-    print('cm:', bayes.confusion_matrix_and_auc(test_s)[0], 'auc: ', bayes.confusion_matrix_and_auc(test_s)[1])
+    print('final test error: ', bayes.calculate_test_error(test_s)[
+          0], ' classifing final test error: ', bayes.calculate_test_error(test_s)[1])
+    print('cm:', bayes.confusion_matrix_and_auc(test_s)[
+          0], 'auc: ', bayes.confusion_matrix_and_auc(test_s)[1])
     # plot IG graph
     bayes.plot_dkl_graph()
     smartBayes = CuriousBayesClassifier(train, columnsInfo)
