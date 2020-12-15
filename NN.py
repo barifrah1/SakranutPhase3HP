@@ -14,10 +14,13 @@ class Net(nn.Module):
 
     def __init__(self, feature_num):
         super(Net, self).__init__()
-        self.fc1 = nn.Linear(feature_num, 100)
+        self.fc1 = nn.Linear(feature_num, 150)
+        self.dropout = nn.Dropout(0.5)
         #self.bn1 = nn.BatchNorm1d(num_features=15)
-        self.fc2 = nn.Linear(100, 10)
-        self.fc3 = nn.Linear(10, 1)
+        self.fc2 = nn.Linear(150, 60)
+        self.fc3 = nn.Linear(60, 30)
+        self.fc4 = nn.Linear(30, 10)
+        self.fc5 = nn.Linear(10, 1)
         #self.dropout = nn.Dropout(0.5)
         #self.fc3 = nn.Linear(10, 5)
         #self.fc4 = nn.Linear(5, 1)
@@ -25,14 +28,14 @@ class Net(nn.Module):
         #self.dropout = nn.Dropout(0.5)
 
     def forward(self, x):
-        x = F.relu(self.fc1(x))
-        #x = self.dropout(x)
+        x = self.fc1(x)
+        x = F.relu(self.dropout(x))
         x = F.relu(self.fc2(x))
-        #x = F.relu(self.fc3(x))
-        #x = F.relu(self.fc4(x))
+        x = F.relu(self.fc3(x))
+        x = F.relu(self.fc4(x))
         #x = F.relu(self.fc5(x))
         #x = self.dropout(x)
-        x = self.sigmoid(self.fc3(x))
+        x = self.sigmoid(self.fc5(x))
         return x
 
 
@@ -58,7 +61,7 @@ def train(X_train, y_train, model, x_test, y_test,
           ):
     #optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
     optimizer = torch.optim.Adam(
-        model.parameters(), lr=1e-5, weight_decay=1e-4)
+        model.parameters(), lr=1e-4, weight_decay=1e-9)
     batch_no = len(X_train) // batch_size
     # print(batch_no)
     train_loss = 0
