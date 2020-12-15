@@ -13,7 +13,7 @@ from sklearn.model_selection import train_test_split
 class DataLoader:
     def __init__(self, args):
         self.args = args
-        self.data = pd.read_csv(self.args['fileName'], nrows=100000)  #
+        self.data = pd.read_csv(self.args['fileName'])  # , nrows=40000
 
     def split_train_test(self, x, y):
         X_train, X_test, y_train, y_test = train_test_split(
@@ -27,8 +27,8 @@ class DataLoader:
             ['failed', 'successful'])]
         # drop na values
         self.data = self.data.dropna()
-        self.data = self.data.drop(['ID',
-                                    'name',  'launched', 'cat_sub_cat'], 1)
+        self.data = self.data.drop(['ID', 'goal', 'pledged', 'usd pledged',
+                                    'name', 'deadline', 'launched', 'cat_sub_cat', 'backers', 'usd_pledged_real', 'backers_s', 'pledged_s', 'mean_pl', 'mean_bac'], 1)
 
         cat_columns = ['state']
         self.data['state'] = self.data['state'].astype('category')
@@ -55,8 +55,8 @@ class DataLoader:
         self.data.columns = columns
         features = self.data.iloc[:, 2:].columns.tolist()
         X = self.data.iloc[:, 2:].values
-        Scaler1 = StandardScaler()
-        X = Scaler1.fit_transform(X)
+        """Scaler1 = StandardScaler()
+        X = Scaler1.fit_transform(X)"""
         return X, Y, features
         # balance data:
         """g=self.data.groupby('state')

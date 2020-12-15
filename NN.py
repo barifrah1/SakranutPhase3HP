@@ -14,17 +14,23 @@ class Net(nn.Module):
 
     def __init__(self, feature_num):
         super(Net, self).__init__()
-        self.fc1 = nn.Linear(feature_num, 256)
-        self.bn1 = nn.BatchNorm1d(num_features=256)
-        self.fc2 = nn.Linear(256, 512)
-        self.fc3 = nn.Linear(512, 1)
+        self.fc1 = nn.Linear(feature_num, 100)
+        #self.bn1 = nn.BatchNorm1d(num_features=15)
+        self.fc2 = nn.Linear(100, 10)
+        self.fc3 = nn.Linear(10, 1)
+        #self.dropout = nn.Dropout(0.5)
+        #self.fc3 = nn.Linear(10, 5)
+        #self.fc4 = nn.Linear(5, 1)
         self.sigmoid = nn.Sigmoid()
         #self.dropout = nn.Dropout(0.5)
 
     def forward(self, x):
-        x = F.relu(self.bn1(self.fc1(x)))
+        x = F.relu(self.fc1(x))
         #x = self.dropout(x)
         x = F.relu(self.fc2(x))
+        #x = F.relu(self.fc3(x))
+        #x = F.relu(self.fc4(x))
+        #x = F.relu(self.fc5(x))
         #x = self.dropout(x)
         x = self.sigmoid(self.fc3(x))
         return x
@@ -50,8 +56,9 @@ def train(X_train, y_train, model, x_test, y_test,
           n_epochs,
           criterion=nn.BCELoss(),
           ):
-    optimizer = torch.optim.SGD(model.parameters(), lr=1e-2)
-    #optimizer = torch.optim.Adam(model.parameters(), lr=5e-3)
+    #optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
+    optimizer = torch.optim.Adam(
+        model.parameters(), lr=1e-5, weight_decay=1e-4)
     batch_no = len(X_train) // batch_size
     # print(batch_no)
     train_loss = 0
@@ -61,8 +68,8 @@ def train(X_train, y_train, model, x_test, y_test,
     #probs = nn.Softmax(dim=1)
     #train_loss_min = np.Inf
     for epoch in tqdm(range(n_epochs)):
+        model.train()
         for i in range(batch_no):
-            model.train()
             start = i*batch_size
             end = start+batch_size
             x_var = Variable(torch.FloatTensor(X_train[start:end]))
@@ -80,14 +87,15 @@ def train(X_train, y_train, model, x_test, y_test,
         train_loss = train_loss / len(X_train)
         # print('labels',labels)
         # print('y_train',y_train[start:end])
+        model.eval()
         with torch.no_grad():
-            model.eval()
-            x_var = Variable(torch.FloatTensor(X_train))
+            #x_var = Variable(torch.FloatTensor(X_train))
+            #y_var = Variable(torch.FloatTensor(y_train))
             output_epoch = model(x_var)
-            #softmax_output = probs(output_epoch)
-            #values, labels = torch.max(output_epoch, 1)
-            auc = roc_auc_score(y_train, output_epoch.numpy())
-            auc_train.append(auc)
+            """train_loss_end_of_epoch = criterion(
+                output.flatten(), y_var.float())"""
+            #auc = roc_auc_score(y_train, output_epoch.numpy())
+            # auc_train.append(auc)
         #print('auc', auc)
         """if train_loss <= train_loss_min:
             print("Validation loss decreased ({:6f} ===> {:6f}). Saving the model...".format(train_loss_min,train_loss))
@@ -100,6 +108,8 @@ def train(X_train, y_train, model, x_test, y_test,
             print("Epoch: {} \tTrain Loss: {} \tTrain Accuracy: {} \tTrain auc:".format(
                 epoch+1, train_loss, auc))  # , num_right / len(y_train[start:end])"""
         if epoch % 10 == 0:
+            if epoch % 200 == 0:
+                print("fddf")
             print("train loss is: ", train_loss)
             pre, auc_test, test_loss, test_loss_list = predict(
                 x_test, y_test, model, auc_test, test_loss_list)
