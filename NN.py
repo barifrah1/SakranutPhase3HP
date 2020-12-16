@@ -116,7 +116,7 @@ def train(X_train, y_train, model, X_val, y_val, x_test, y_test,
         x_test, y_test, model)
     print(" Test_loss: {} and Test auc: {}".format(
         trained_test_loss, trained_test_auc))
-    print('Training Ended! ')
+    print('Training Ended!! ')
     plt.plot(validation_loss_list)
     plt.show()
     plt.plot(auc_validation)
