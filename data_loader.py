@@ -18,20 +18,23 @@ class DataLoader:
         self.data = pd.read_csv(
             self.args['fileName'])  # , nrows=100000
 
-    def split_train_test(self, x, y):
-        X_train, X_test, y_train, y_test = train_test_split(
-            x, y, test_size=0.2)
-        return X_train, X_test, y_train, y_test
-    # get dataframe and return numpy arrey and columns names and range list
+    # split data into 70% train , 15% validation and 15% test
+    def split_train_validation_test(self, x, y):
+        X_train_and_val, X_test, y_train_and_val, y_test = train_test_split(
+            x, y, test_size=0.15)
+        X_train, X_val, y_train, y_val = train_test_split(
+            X_train_and_val, y_train_and_val, test_size=len(X_test))
 
+        return X_train, X_val, X_test, y_train, y_val, y_test
+
+    # calculate histogram over all terms in projects name - drop all english stop words
     def hist(self):
         names = self.data["name"]
         states = self.data["state"]
-
         di = {}
-        stops = stopwords.words()
+        stops = stopwords.words('english')
         for i, name in enumerate(names):
-            if(states[i] == "successful"):
+            if(states[i] == 1):
                 state = 1
             else:
                 state = 0
@@ -49,7 +52,6 @@ class DataLoader:
         return sorted_dict
 
     def preprocess(self):
-
         self.data = self.data.loc[self.data['state'].isin(
             ['failed', 'successful'])]
         # drop na values
@@ -61,12 +63,13 @@ class DataLoader:
         self.data['state'] = self.data['state'].astype('category')
         self.data[cat_columns] = self.data[cat_columns].apply(
             lambda x: x.cat.codes)
-
+        # one hot encoding for categorical variables
         category = pd.get_dummies(self.data['category'], drop_first=True)
         main_category = pd.get_dummies(
             self.data['main_category'], drop_first=True)
         currency = pd.get_dummies(self.data['currency'], drop_first=True)
         country = pd.get_dummies(self.data['country'], drop_first=True)
+        # add 250 frequent words as features of the data set
         word_frequencies_dict = self.hist()
         s = {k: word_frequencies_dict[k]
              for k in list(word_frequencies_dict)[:250]}
@@ -78,7 +81,6 @@ class DataLoader:
             for n in names:
                 if(n.lower() in s_keys):
                     self.data.set_value(idx, n.lower(), 1)
-                    #self.data.iloc[idx][n.lower()] = 1
         self.data = pd.concat(
             [self.data, category, main_category, currency, country], axis=1)
         self.data = self.data.drop(
@@ -86,20 +88,10 @@ class DataLoader:
         Y = self.data.loc[:, 'state'].values
         self.data = self.data.drop(['state', 'name'], 1)
         columns = self.data.columns
-
-        """Scaler1 = StandardScaler()
-        self.data = pd.DataFrame(Scaler1.fit_transform(self.data))"""
-
         self.data.columns = columns
         features = self.data.iloc[:, 2:].columns.tolist()
         X = self.data.iloc[:, 2:].values
+        # normalize data
         Scaler1 = StandardScaler()
         X = Scaler1.fit_transform(X)
         return X, Y, features
-        # balance data:
-        """g=self.data.groupby('state')
-        self.data=g.apply(lambda x: x.sample(
-            g.size().min()).reset_index(drop=True))
-        self.data[cat_columns] = self.data[cat_columns].apply(
-            lambda x: x.cat.codes)
-        """
