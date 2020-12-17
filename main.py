@@ -24,9 +24,11 @@ if __name__ == '__main__':
     #print("rf test bce is:", log_loss(y_test, y_pred_test))
     feature_num = len(columnsInfo)
     print('feature_num', feature_num)
-    model = NN.Net(feature_num)
-    NN.train(X_train, y_train, model, X_val, y_val, X_test, y_test,
-             batch_size=args["batch_size"],
-             n_epochs=args["n_epochs"],
-             criterion=loss_function)
+    for x in range(2):
+      model = NN.Net(feature_num)    
+      lr,batch_size=NN.param()
+      NN.train(X_train, y_train, model, X_val, y_val, X_test, y_test,
+                  batch_size,lr,
+                  n_epochs=args["n_epochs"],
+                  criterion=loss_function)
     # optimizer = nn.BCELoss)

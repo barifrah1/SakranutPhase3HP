@@ -8,6 +8,7 @@ from sklearn.utils import shuffle
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 import nltk
+#nltk.download('stopwords')
 from nltk.corpus import stopwords
 # split a dataset into train and test sets
 
@@ -80,7 +81,7 @@ class DataLoader:
             names = name.split(" ")
             for n in names:
                 if(n.lower() in s_keys):
-                    self.data.set_value(idx, n.lower(), 1)
+                    self.data.at[idx, n.lower()]=1
         self.data = pd.concat(
             [self.data, category, main_category, currency, country], axis=1)
         self.data = self.data.drop(
