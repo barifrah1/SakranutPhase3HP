@@ -1,0 +1,75 @@
+[nltk_data] Downloading package stopwords to /root/nltk_data...
+[nltk_data]   Unzipping corpora/stopwords.zip.
+feature_num 459
+number layer in current network 14
+hidden_size of layer1 is 178.
+layer1 is 459x178
+hidden_size of layer2 is 118.
+layer2 is 178x118
+hidden_size of layer3 is 262.
+layer3 is 118x262
+dropout after layer3 with p0.8447063017503271
+hidden_size of layer4 is 14.
+layer4 is 262x14
+hidden_size of layer5 is 152.
+layer5 is 14x152
+dropout after layer5 with p0.41206607030952824
+hidden_size of layer6 is 253.
+layer6 is 152x253
+hidden_size of layer7 is 145.
+layer7 is 253x145
+hidden_size of layer8 is 230.
+layer8 is 145x230
+hidden_size of layer9 is 203.
+layer9 is 230x203
+dropout after layer9 with p0.4878332293523112
+hidden_size of layer10 is 68.
+layer10 is 203x68
+hidden_size of layer11 is 70.
+layer11 is 68x70
+hidden_size of layer12 is 222.
+layer12 is 70x222
+hidden_size of layer13 is 82.
+layer13 is 222x82
+hidden_size of layer14 is 247.
+layer14 is 82x1
+lr 0.004896742318384187
+batch_size [31369]
+weight_decay 2.40524153421491e-05
+Test loss before training is: 0.6875903606414795
+Test auc before training is: 0.5066225864634
+ Current Train loss on epoch 1 is:  0.6422858616011039
+Current validation loss on epoch 1 is: 0.6747560501098633 
+ Current validation auc is: 0.3108449322130178 
+ Current Train loss on epoch 6 is:  0.6385171856800698
+Current validation loss on epoch 6 is: 0.6739802956581116 
+ Current validation auc is: 0.5 
+ Current Train loss on epoch 11 is:  0.6385218192262568
+Current validation loss on epoch 11 is: 0.6739721298217773 
+ Current validation auc is: 0.5 
+Validation loss by epoch: [tensor(0.6875), tensor(0.6748), tensor(0.6741), tensor(0.6741), tensor(0.6740), tensor(0.6740), tensor(0.6740), tensor(0.6740), tensor(0.6740), tensor(0.6740), tensor(0.6740), tensor(0.6740)] 
+best_loss for current iteration: tensor(0.6740)
+number layer in current network 2
+hidden_size of layer1 is 211.
+layer1 is 459x211
+hidden_size of layer2 is 26.
+layer2 is 211x1
+lr 0.007625857700887712
+batch_size [39889]
+weight_decay 0.00033289905765040696
+Test loss before training is: 0.707219660282135
+Test auc before training is: 0.4938140290302863
+ Current Train loss on epoch 1 is:  0.569389274683829
+Current validation loss on epoch 1 is: 0.6335323452949524 
+ Current validation auc is: 0.6830866580847637 
+ Current Train loss on epoch 6 is:  0.5078119193208352
+Current validation loss on epoch 6 is: 0.5917075872421265 
+ Current validation auc is: 0.7287990454010256 
+ Current Train loss on epoch 11 is:  0.5062948248472416
+Current validation loss on epoch 11 is: 0.5908802151679993 
+ Current validation auc is: 0.7299335657419987 
+ Current Train loss on epoch 16 is:  0.5063252996465079
+Current validation loss on epoch 16 is: 0.5908883810043335 
+ Current validation auc is: 0.7298738196150946 
+Validation loss by epoch: [tensor(0.7085), tensor(0.6335), tensor(0.6080), tensor(0.5972), tensor(0.5929), tensor(0.5927), tensor(0.5917), tensor(0.5913), tensor(0.5909), tensor(0.5909), tensor(0.5910), tensor(0.5909), tensor(0.5909), tensor(0.5909), tensor(0.5908), tensor(0.5908), tensor(0.5909), tensor(0.5909), tensor(0.5909)] 
+best_loss for current iteration: tensor(0.5908)

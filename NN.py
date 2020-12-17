@@ -23,8 +23,7 @@ def net_build(feature_num):
         drop_rand=np.random.uniform(0,1)
         if x==0:
             layer.append(nn.Linear(feature_num,hidden_size))
-            
-            print("layer{} is {}x{}".format(x+1, feature_num,hidden_size))
+            #print("layer{} is {}x{}".format(x+1, feature_num,hidden_size))
             if drop_rand<0.2:
                 drop_size=np.random.uniform(0.2,0.9)
                 layer.append(nn.Dropout(drop_size))
@@ -34,15 +33,15 @@ def net_build(feature_num):
             continue
         if x==num_layer-1:
             layer.append(nn.Linear(last,1))
-            print("layer{} is {}x{}".format(x+1, last,1))
+            #print("layer{} is {}x{}".format(x+1, last,1))
             continue 
         layer.append(nn.Linear(last,hidden_size))
-        print("layer{} is {}x{}".format(x+1, last,hidden_size))
+        #print("layer{} is {}x{}".format(x+1, last,hidden_size))
         layer.append(nn.ReLU())
         if drop_rand<0.2:
             drop_size=np.random.uniform(0.2,0.9)
             layer.append(nn.Dropout(drop_size)) 
-            print("dropout after layer{} with p{}".format(x+1,drop_size))
+            print("dropout after layer{} with p={}".format(x+1,drop_size))
         last=hidden_size
     layer.append(nn.Sigmoid())    
     net = nn.Sequential(*layer)
@@ -173,7 +172,8 @@ def train(X_train, y_train, model, X_val, y_val, x_test, y_test,
             if (previews-current)<1e-5:
                 treshold+=1
             if (previews-current)>=1e-5:
-                treshold=0
+                if treshold>0:
+                    treshold-=1
         if treshold==4:
             ('break in epoch', epoch+1 )
             break

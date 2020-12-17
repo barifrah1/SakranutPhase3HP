@@ -72,8 +72,11 @@ class DataLoader:
         country = pd.get_dummies(self.data['country'], drop_first=True)
         # add 250 frequent words as features of the data set
         word_frequencies_dict = self.hist()
+
+        rand_number_feature=np.random.randint(50,500, size=1)[0]
+        print('number of top word that enter to model is:',rand_number_feature)
         s = {k: word_frequencies_dict[k]
-             for k in list(word_frequencies_dict)[:250]}
+             for k in list(word_frequencies_dict)[:rand_number_feature]}
         s_keys = s.keys()
         for key in s_keys:
             self.data[key] = 0

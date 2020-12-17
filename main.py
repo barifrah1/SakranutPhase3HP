@@ -24,7 +24,7 @@ if __name__ == '__main__':
     #print("rf test bce is:", log_loss(y_test, y_pred_test))
     feature_num = len(columnsInfo)
     print('feature_num', feature_num)
-    for x in range(2):
+    for x in range(1000):
       model = NN.Net(feature_num)    
       lr,batch_size=NN.param()
       NN.train(X_train, y_train, model, X_val, y_val, X_test, y_test,
