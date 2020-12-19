@@ -8,14 +8,15 @@ from sklearn.utils import shuffle
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 import nltk
-#nltk.download('stopwords')
+# nltk.download('stopwords')
 from nltk.corpus import stopwords
 # split a dataset into train and test sets
 
 
 class DataLoader:
-    def __init__(self, args):
+    def __init__(self, args, is_grid_search):
         self.args = args
+        self.is_grid_search = is_grid_search
         self.data = pd.read_csv(
             self.args['fileName'])  # , nrows=100000
 
@@ -72,9 +73,12 @@ class DataLoader:
         country = pd.get_dummies(self.data['country'], drop_first=True)
         # add 250 frequent words as features of the data set
         word_frequencies_dict = self.hist()
-
-        rand_number_feature=np.random.randint(50,500, size=1)[0]
-        print('number of top word that enter to model is:',rand_number_feature)
+        if(self.is_grid_search):
+            rand_number_feature = np.random.randint(50, 500, size=1)[0]
+            print('number of words used as features in this model is :',
+                  rand_number_feature)
+        else:
+            rand_number_feature = self.args["number_of_words_features"]
         s = {k: word_frequencies_dict[k]
              for k in list(word_frequencies_dict)[:rand_number_feature]}
         s_keys = s.keys()
@@ -84,7 +88,7 @@ class DataLoader:
             names = name.split(" ")
             for n in names:
                 if(n.lower() in s_keys):
-                    self.data.at[idx, n.lower()]=1
+                    self.data.at[idx, n.lower()] = 1
         self.data = pd.concat(
             [self.data, category, main_category, currency, country], axis=1)
         self.data = self.data.drop(
