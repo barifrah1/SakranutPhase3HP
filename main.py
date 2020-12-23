@@ -12,7 +12,7 @@ GRID_SEARCH_MODE = False
 if __name__ == '__main__':
     if(GRID_SEARCH_MODE):
         gridsearch = GridSearch()
-        gridsearch.exectue_grid_search(3)
+        gridsearch.exectue_grid_search(10000)
     else:
         data_loader = DataLoader(args, False)  # False for is_grid_search mode
         # preprocessing

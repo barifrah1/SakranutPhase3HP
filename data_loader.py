@@ -8,7 +8,7 @@ from sklearn.utils import shuffle
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 import nltk
-# nltk.download('stopwords')
+#nltk.download('stopwords')
 from nltk.corpus import stopwords
 # split a dataset into train and test sets
 
@@ -74,7 +74,7 @@ class DataLoader:
         # add 250 frequent words as features of the data set
         word_frequencies_dict = self.hist()
         if(self.is_grid_search):
-            rand_number_feature = np.random.randint(50, 500, size=1)[0]
+            rand_number_feature = np.random.randint(250, 300, size=1)[0]
             print('number of words used as features in this model is :',
                   rand_number_feature)
         else:

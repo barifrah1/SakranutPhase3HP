@@ -68,7 +68,24 @@ class Net(nn.Module):
         self.sigmoid = nn.Sigmoid()
         # self.dropout = nn.Dropout(0.5)"""
         if(net == None):
-            layer_size = 150
+            
+            self.seq = nn.Sequential(
+                nn.Linear(feature_num, 32),
+                nn.BatchNorm1d(32),
+                nn.Dropout(0.5),
+                nn.ReLU(),
+                nn.Linear(32, 6),
+                nn.ReLU(),
+                nn.Linear(6, 1),
+                nn.Sigmoid())
+           
+            """self.seq = nn.Sequential(
+                nn.Linear(feature_num, 2),
+                nn.ReLU(),
+                nn.Linear(2, 1),
+                nn.Sigmoid())                
+            """
+            """layer_size = 150
             self.seq = nn.Sequential(
                 nn.Linear(feature_num, layer_size),
                 nn.Dropout(0.5),
@@ -81,7 +98,7 @@ class Net(nn.Module):
                 nn.ReLU(),
                 nn.Linear(int(layer_size*0.3), 1),
                 nn.Sigmoid()
-            )
+            """
         else:
             self.seq = net
 
@@ -198,6 +215,11 @@ def train(X_train, y_train, model, X_val, y_val, x_test, y_test,
         validation_loss_list))
     if is_grid_search:
         print('best_loss for current iteration:', min(validation_loss_list))
+        trained_test_auc, _, trained_test_loss, _ = predict(
+            x_test, y_test, model)
+        print(" Test_loss: {} and Test auc: {}".format(
+            trained_test_loss, trained_test_auc))
+        
     else:
         print("Validation AUC by epoch: {} ".format(
             auc_train, auc_validation))
@@ -227,3 +249,4 @@ def train(X_train, y_train, model, X_val, y_val, x_test, y_test,
         plt.ylabel('auc')
         plt.plot(auc_validation)
         plt.show()
+        
