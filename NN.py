@@ -50,25 +50,7 @@ class Net(nn.Module):
 
     def __init__(self, feature_num, net=None):  # in case building the net for the final model
         super(Net, self).__init__()
-        """layer_size = np.random.randint(10, 300, size=1)[0]
-        layer_size = 150
-        drop_size = np.random.uniform(0.2, 0.9)
-        print('layer_size', layer_size)
-        print('drop_size', drop_size)
-        self.fc1 = nn.Linear(feature_num, layer_size)
-        self.dropout = nn.Dropout(drop_size)
-        # self.bn1 = nn.BatchNorm1d(num_features=15)
-        self.fc2 = nn.Linear(layer_size, int(layer_size*0.7))
-        self.fc3 = nn.Linear(int(layer_size*0.7), int(layer_size*0.5))
-        self.fc4 = nn.Linear(int(layer_size*0.5), int(layer_size*0.3))
-        self.fc5 = nn.Linear(int(layer_size*0.3), 1)
-        # self.dropout = nn.Dropout(0.5)
-        # self.fc3 = nn.Linear(10, 5)
-        # self.fc4 = nn.Linear(5, 1)
-        self.sigmoid = nn.Sigmoid()
-        # self.dropout = nn.Dropout(0.5)"""
         if(net == None):
-            
             self.seq = nn.Sequential(
                 nn.Linear(feature_num, 32),
                 nn.BatchNorm1d(32),
@@ -78,44 +60,11 @@ class Net(nn.Module):
                 nn.ReLU(),
                 nn.Linear(6, 1),
                 nn.Sigmoid())
-           
-            """self.seq = nn.Sequential(
-                nn.Linear(feature_num, 2),
-                nn.ReLU(),
-                nn.Linear(2, 1),
-                nn.Sigmoid())                
-            """
-            """layer_size = 150
-            self.seq = nn.Sequential(
-                nn.Linear(feature_num, layer_size),
-                nn.Dropout(0.5),
-                nn.ReLU(),
-                nn.Linear(layer_size, int(layer_size*0.7)),
-                nn.ReLU(),
-                nn.Linear(int(layer_size*0.7), int(layer_size*0.5)),
-                nn.ReLU(),
-                nn.Linear(int(layer_size*0.5), int(layer_size*0.3)),
-                nn.ReLU(),
-                nn.Linear(int(layer_size*0.3), 1),
-                nn.Sigmoid()
-            """
         else:
             self.seq = net
 
     def forward(self, x):
         return self.seq(x)
-
-    """def forward(self, x):
-        x = self.fc1(x)
-        x = F.relu(self.dropout(x))
-        x = F.relu(self.fc2(x))
-        x = F.relu(self.fc3(x))
-        x = F.relu(self.fc4(x))
-        # x = F.relu(self.fc5(x))
-        # x = self.dropout(x)
-        x = self.sigmoid(self.fc5(x))
-        return x
-    """
 
 
 def count_parameters(model):
@@ -189,12 +138,7 @@ def train(X_train, y_train, model, X_val, y_val, x_test, y_test,
             y_var = Variable(torch.FloatTensor(y_val))
             trained_val_auc, auc_validation, trained_val_loss, validation_loss_list = predict(
                 X_val, y_val, model, auc_validation, validation_loss_list)
-        """if train_loss <= train_loss_min:
-            print("Validation loss decreased ({:6f} ===> {:6f}). Saving the model...".format(
-                train_loss_min,train_loss))
-            torch.save(model.state_dict(), "model.pt")
-            train_loss_min = train_loss
-        """
+
         if epoch % 5 == 0:
             print(f" Current Train loss on epoch {epoch+1} is: ", train_loss)
             print(
@@ -228,7 +172,9 @@ def train(X_train, y_train, model, X_val, y_val, x_test, y_test,
         print(" Test_loss: {} and Test auc: {}".format(
             trained_test_loss, trained_test_auc))
         number_of_params = count_parameters(model)
+        print('number_of_params',number_of_params)
         number_of_data_points = y_train.shape[0]
+        print('number_of_data_points',number_of_data_points)
         AIC = number_of_data_points * \
             np.log(trained_test_loss) + 2*number_of_params
         BIC = number_of_data_points * \

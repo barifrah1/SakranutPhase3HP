@@ -1,0 +1,4 @@
+ Test_loss: 0.587982409954071 and Test auc: 0.7367495078013134
+number_of_params 237441
+AIC of the model is: 359043.74803540355
+BIC of the model is: 2817647.3523874185

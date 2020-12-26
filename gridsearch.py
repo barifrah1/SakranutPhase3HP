@@ -17,8 +17,7 @@ class GridSearch():
         self.nn = None
 
     def draw_params(self):
-        #num_layer = np.random.randint(2, 15, size=1)[0]
-        num_layer=2
+        num_layer = np.random.randint(2, 15, size=1)[0]
         batch_size = np.random.randint(256, 50000, size=1)
         lr = np.random.uniform(1e-6, 0.01)
         weight_decay = np.random.uniform(0, lr/10)
@@ -59,12 +58,6 @@ def grid_search_net_build(feature_num, number_of_layers, dropout_prob):
             layer.append(nn.Dropout(0.5))
             layer.append(nn.ReLU())
             #print("layer{} is {}x{}".format(x+1, feature_num,hidden_size))
-            """if drop_rand < 0.2:
-                drop_size = np.random.uniform(0.2, 0.9)
-                layer.append(nn.Dropout(0.5))
-                layer.append(nn.ReLU())
-                print("dropout after layer{} with p={}".format(x+1, drop_size))
-            """
             last = hidden_size[x]
             continue
         if x == num_layer-1:
