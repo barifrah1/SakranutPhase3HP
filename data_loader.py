@@ -1,3 +1,4 @@
+from nltk.corpus import stopwords
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -9,7 +10,6 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 import nltk
 nltk.download('stopwords')
-from nltk.corpus import stopwords
 # split a dataset into train and test sets
 
 
@@ -18,7 +18,7 @@ class DataLoader:
         self.args = args
         self.is_grid_search = is_grid_search
         self.data = pd.read_csv(
-            self.args['fileName'])  # , nrows=100000
+            self.args['fileName'], nrows=100000)  # , nrows=100000
 
     # split data into 70% train , 15% validation and 15% test
     def split_train_validation_test(self, x, y):
